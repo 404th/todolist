@@ -6,36 +6,35 @@ type Handler struct {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
-	routes := gin.New()
+	router := gin.New()
 
-	// AUTHENTICATION
-	auth := routes.Group("/auth")
+	// AUTH
+	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up")
 		auth.POST("/sign-in")
 	}
 
 	// LISTS
-	lists := routes.Group("/lists")
+	lists := router.Group("/lists")
 	{
 		lists.GET("/")
-		lists.GET("/:id")
 		lists.POST("/")
+		lists.GET("/:id")
 		lists.PUT("/:id")
 		lists.DELETE("/:id")
-		lists.GET("/:id/items")
-		lists.POST("/:id/items")
+
+		items := router.Group(":id/items")
+		{
+			items.GET("/")
+			items.POST("/")
+			items.PUT("/:item_id")
+			items.GET("/:item_id")
+			items.DELETE("/:item_id")
+		}
 	}
 
-	// ITEMS
-	items := routes.Group("/items")
-	{
-		items.GET("/:item_id")
-		items.PUT("/:item_id")
-		items.DELETE("/:item_id")
-	}
-
-	return routes
+	return router
 }
 
 // package handler
