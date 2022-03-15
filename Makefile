@@ -6,7 +6,7 @@
 # createdb:
 # 	sudo docker exec -it pgs createdb --username=postgres --owner=postgres simple_bank
 
-# dropdb:
+# dropdb    :
 # 	sudo docker exec -it pgs dropdb -U postgres simple_bank
 
 # migrateup:
@@ -22,3 +22,23 @@
 # 	sudo docker exec -it pgs psql -U postgres simple_bank
 
 # .PHONY: createdb, dropdbm, migrateup, migratedown, opendb
+
+postgres:
+	sudo docker run -d --name pgs -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres postgres:14-alpine3.15
+
+createdb:
+	sudo docker exec -it pgs createdb --username=postgres --owner=postgres simple_bank
+
+dropdb:
+	sudo docker exec -it dropdb -U postgres simple_bank
+
+migrateup:
+	sudo migrate -path ./migration -database "postgresql://postgres:postgres@localhost:5555/simple_bank?sslmode=disable" -verbose up
+
+migratedown:
+	sudo migrate -path ./migration -database "postgresql://postgres:postgres@localhost:5555/simple_bank?sslmode=disable" -verbose down
+
+opendb:
+	sudo docker exec -it pgs psql -U postgres simple_bank
+
+.PHONY: postgres, createdb, dropdb, migrateup, migratedown, opendb
