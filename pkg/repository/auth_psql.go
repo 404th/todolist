@@ -22,7 +22,8 @@ var (
 )
 
 func (ar AuthRepository) CreateUser(user model.User) (int, error) {
-	var id int
+	var id int = 0
+
 	query_string := `
 		INSERT INTO users (
 			username,
@@ -35,8 +36,8 @@ func (ar AuthRepository) CreateUser(user model.User) (int, error) {
 		) RETURNING id
 	`
 	row := ar.db.QueryRow(query_string, user.Username, user.Name, user.Password)
-	if err := row.Scan(id); err != nil {
-		return 0, err
+	if err := row.Scan(&id); err != nil {
+		return id, err
 	}
 
 	return id, nil
