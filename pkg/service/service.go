@@ -19,6 +19,7 @@ func NewService(repo *repository.Repository) *Service {
 
 type Authorization interface {
 	CreateUser(model.User) (int, error)
+	GetUser(model.SignInInput) (string, error)
 }
 
 type User interface{}

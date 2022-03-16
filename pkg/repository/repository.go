@@ -19,6 +19,7 @@ func NewRepository(db *sqlx.DB) *Repository {
 
 type Authorization interface {
 	CreateUser(user model.User) (int, error)
+	GetUser(user model.SignInInput) (model.User, error)
 }
 
 type User interface{}

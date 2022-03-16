@@ -42,3 +42,14 @@ func (ar AuthRepository) CreateUser(user model.User) (int, error) {
 
 	return id, nil
 }
+
+func (ar AuthRepository) GetUser(user model.SignInInput) (model.User, error) {
+	var resp_user model.User
+
+	qs := `SELECT id FROM users WHERE username=$1 AND password_hash=$2`
+	if err := ar.db.Get(&resp_user, qs, user.Username, user.Password); err != nil {
+		return resp_user, err
+	}
+
+	return resp_user, nil
+}

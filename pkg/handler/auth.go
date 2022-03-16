@@ -26,4 +26,20 @@ func (h *Handler) signUp(c *gin.Context) {
 	})
 }
 
-func (h *Handler) signIn(c *gin.Context) {}
+func (h *Handler) signIn(c *gin.Context) {
+	var sign_in_input model.SignInInput
+	if err := c.BindJSON(&sign_in_input); err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	jwt, err := h.service.GetUser(sign_in_input)
+	if err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]string{
+		"token": jwt,
+	})
+}
