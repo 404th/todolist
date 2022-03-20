@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"net/http"
 	"time"
 )
@@ -18,5 +19,9 @@ func (s *Server) RunServer(port string, handler http.Handler) error {
 		Handler:        handler,
 	}
 
-	return nil
+	return s.httpServer.ListenAndServe()
+}
+
+func (s *Server) Shutdown(ctx context.Context) error {
+	return s.httpServer.Shutdown(ctx)
 }
